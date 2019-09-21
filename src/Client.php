@@ -68,7 +68,6 @@ class Client
     public function request(string $method, string $endpoint, array $params = [], ?string $token = null)
     {
         $headers = [
-            'Ocp-Apim-Trace' => 'true',
             'Ocp-Apim-Subscription-Key' => $this->apiKey,
         ];
         if ($token) {
