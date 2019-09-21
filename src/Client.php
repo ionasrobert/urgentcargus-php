@@ -5,16 +5,18 @@ declare(strict_types=1);
 namespace MNIB\UrgentCargus;
 
 use GuzzleHttp\Client as HttpClient;
-use GuzzleHttp\Exception\ClientException as GuzzleClientException;
 use GuzzleHttp\Exception\GuzzleException;
 use MNIB\UrgentCargus\Exception\ClientException as UrgentCargusClientException;
 use MNIB\UrgentCargus\Exception\InvalidSubscriptionException;
 use function GuzzleHttp\json_decode;
+use function sprintf;
+use function trigger_error;
+use const E_USER_DEPRECATED;
 
 class Client
 {
     /** Library version */
-    public const VERSION = '0.9.2';
+    public const VERSION = '0.9.3';
 
     /** Default API Uri */
     public const API_URI = 'https://urgentcargus.azure-api.net/api/';
@@ -24,6 +26,9 @@ class Client
 
     /** @var HttpClient */
     private $httpClient;
+
+    /** @var string|null */
+    private $accessToken;
 
     /**
      * Set subscription key and uri for the UrgentCargus API.
@@ -45,7 +50,7 @@ class Client
             'timeout' => 60,
             'allow_redirects' => false,
             'headers' => [
-                'User-Agent' => 'UrgentCargusAPI-PHP (Version ' . self::VERSION . ')',
+                'User-Agent' => 'UrgentCargusAPI-PHP (v' . self::VERSION . ')',
                 'Content-Type' => 'application/json',
                 'Accept-Charset' => 'utf-8',
             ],
@@ -61,7 +66,6 @@ class Client
      * @param string|null $token
      *
      * @throws UrgentCargusClientException
-     * @throws GuzzleException
      *
      * @return mixed
      */
@@ -70,8 +74,13 @@ class Client
         $headers = [
             'Ocp-Apim-Subscription-Key' => $this->apiKey,
         ];
+
         if ($token) {
+            @trigger_error(sprintf('Calling "%s()" with the $token argument is deprecated since 0.9.3.', __METHOD__), E_USER_DEPRECATED);
+
             $headers['Authorization'] = 'Bearer ' . $token;
+        } elseif ($this->accessToken) {
+            $headers['Authorization'] = 'Bearer ' . $this->accessToken;
         }
 
         try {
@@ -81,7 +90,7 @@ class Client
             ]);
 
             $contents = (string)$response->getBody();
-        } catch (GuzzleClientException $exception) {
+        } catch (GuzzleException $exception) {
             throw UrgentCargusClientException::fromException($exception);
         }
 
@@ -94,8 +103,6 @@ class Client
      * @param string      $endpoint
      * @param mixed[]     $params
      * @param string|null $token
-     *
-     * @throws GuzzleException
      *
      * @return mixed
      */
@@ -111,8 +118,6 @@ class Client
      * @param mixed[]     $params
      * @param string|null $token
      *
-     * @throws GuzzleException
-     *
      * @return mixed
      */
     public function post(string $endpoint, array $params = [], ?string $token = null)
@@ -126,8 +131,6 @@ class Client
      * @param string      $endpoint
      * @param mixed[]     $params
      * @param string|null $token
-     *
-     * @throws GuzzleException
      *
      * @return mixed
      */
@@ -143,8 +146,6 @@ class Client
      * @param mixed[]     $params
      * @param string|null $token
      *
-     * @throws GuzzleException
-     *
      * @return mixed
      */
     public function delete(string $endpoint, array $params = [], ?string $token = null)
@@ -158,15 +159,15 @@ class Client
      * @param string $username
      * @param string $password
      *
-     * @throws GuzzleException
-     *
      * @return string
      */
     public function getToken(string $username, string $password): string
     {
-        return $this->post('LoginUser', [
+        $this->accessToken = $this->post('LoginUser', [
             'UserName' => $username,
             'Password' => $password,
         ]);
+
+        return $this->accessToken;
     }
 }

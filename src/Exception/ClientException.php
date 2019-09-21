@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace MNIB\UrgentCargus\Exception;
 
-use GuzzleHttp\Exception\ClientException as GuzzleClientException;
+use GuzzleHttp\Exception\GuzzleException;
 use RuntimeException;
 use function GuzzleHttp\json_decode;
+use function is_string;
+use function sprintf;
 
 class ClientException extends RuntimeException
 {
-    public static function fromException(GuzzleClientException $exception): self
+    public static function fromException(GuzzleException $exception): self
     {
         $code = $exception->getResponse() !== null ? $exception->getResponse()->getStatusCode() : 0;
         $message = $exception->getMessage();
@@ -27,6 +29,8 @@ class ClientException extends RuntimeException
             $message = $data['message'];
         } elseif (isset($data['Error']) && $data['Error'] !== '') {
             $message = $data['Error'];
+        } elseif (is_string($data)) {
+            $message = $data;
         }
 
         return new self($message, $code);
