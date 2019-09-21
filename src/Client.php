@@ -8,6 +8,7 @@ use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\GuzzleException;
 use MNIB\UrgentCargus\Exception\ClientException as UrgentCargusClientException;
 use MNIB\UrgentCargus\Exception\InvalidSubscriptionException;
+use MNIB\UrgentCargus\Exception\InvalidTokenException;
 use function GuzzleHttp\json_decode;
 use function sprintf;
 use function trigger_error;
@@ -16,7 +17,7 @@ use const E_USER_DEPRECATED;
 class Client
 {
     /** Library version */
-    public const VERSION = '0.9.3';
+    public const VERSION = '0.9.4';
 
     /** Default API Uri */
     public const API_URI = 'https://urgentcargus.azure-api.net/api/';
@@ -163,10 +164,16 @@ class Client
      */
     public function getToken(string $username, string $password): string
     {
-        $this->accessToken = $this->post('LoginUser', [
+        $accessToken = $this->post('LoginUser', [
             'UserName' => $username,
             'Password' => $password,
         ]);
+
+        if ($accessToken === null || $accessToken === '') {
+            throw new InvalidTokenException('UrgentCargus API did not return a valid token.');
+        }
+
+        $this->accessToken = $accessToken;
 
         return $this->accessToken;
     }
