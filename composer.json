@@ -1,5 +1,5 @@
 {
-    "name": "mnib-dev/urgentcargus-php",
+    "name": "mnib-dev/urgentcargus",
     "description": "A very simple PHP Wrapper for the UrgentCargus API",
     "type": "library",
     "license": "MIT",
@@ -11,6 +11,10 @@
     },
     "require-dev": {
         "mnib-dev/coding-standard": "dev-master"
+    },
+    "replace": {
+        "mnib/urgentcargus-php": "self.version",
+        "mnib-dev/urgentcargus-php": "self.version"
     },
     "config": {
         "preferred-install": {
