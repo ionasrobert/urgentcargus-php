@@ -19,5 +19,10 @@
         "psr-4": {
             "MNIB\\UrgentCargus\\": "src/"
         }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.x-dev"
+        }
     }
 }
