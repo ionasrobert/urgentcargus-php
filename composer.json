@@ -13,8 +13,8 @@
         "mnib-dev/coding-standard": "dev-master"
     },
     "replace": {
-        "mnib/urgentcargus-php": "self.version",
-        "mnib-dev/urgentcargus-php": "self.version"
+        "mnib/urgentcargus-php": "*",
+        "mnib-dev/urgentcargus-php": "*"
     },
     "config": {
         "preferred-install": {
