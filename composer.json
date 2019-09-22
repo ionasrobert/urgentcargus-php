@@ -1,5 +1,5 @@
 {
-    "name": "mnib/urgentcargus-php",
+    "name": "mnib-dev/urgentcargus-php",
     "description": "A very simple PHP Wrapper for the UrgentCargus API",
     "type": "library",
     "license": "MIT",
