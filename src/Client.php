@@ -17,7 +17,7 @@ use const E_USER_DEPRECATED;
 class Client
 {
     /** Library version */
-    public const VERSION = '0.9.7';
+    public const VERSION = '0.9.8';
 
     /** Default API Uri */
     public const API_URI = 'https://urgentcargus.azure-api.net/api/';
