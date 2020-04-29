@@ -17,7 +17,7 @@ use const E_USER_DEPRECATED;
 class Client
 {
     /** Library version */
-    public const VERSION = '0.9.9';
+    public const VERSION = '0.9.10';
 
     /** Default API Uri */
     public const API_URI = 'https://urgentcargus.azure-api.net/api/';
@@ -173,8 +173,13 @@ class Client
             throw new InvalidTokenException('UrgentCargus API did not return a valid token.');
         }
 
-        $this->accessToken = $accessToken;
+        $this->setAccessToken($accessToken);
 
         return $this->accessToken;
+    }
+
+    public function setAccessToken(?string $accessToken): void
+    {
+        $this->accessToken = $accessToken;
     }
 }
