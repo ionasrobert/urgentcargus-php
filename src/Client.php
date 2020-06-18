@@ -157,7 +157,7 @@ class Client
     /**
      * Get token from service.
      */
-    private function createAccessToken(string $username, string $password): void
+    public function createAccessToken(string $username, string $password): void
     {
         $accessToken = $this->post('LoginUser', [
             'UserName' => $username,

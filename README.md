@@ -4,7 +4,7 @@ The API is RESTful JSON over HTTP using [GuzzleHttp](http://docs.guzzlephp.org/e
 # Usage example
 ```php
 $client = new \MNIB\UrgentCargus\Client($apiKey, $apiUri);
-$client->getToken('username', 'password');
+$client->createAccessToken('username', 'password');
 
 $result = $client->get('PickupLocations');
 
