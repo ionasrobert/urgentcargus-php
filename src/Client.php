@@ -17,7 +17,7 @@ use const E_USER_DEPRECATED;
 class Client
 {
     /** Library version */
-    public const VERSION = '0.9.10';
+    public const VERSION = '0.9.11';
 
     /** Default API Uri */
     public const API_URI = 'https://urgentcargus.azure-api.net/api/';
@@ -33,9 +33,6 @@ class Client
 
     /**
      * Set subscription key and uri for the UrgentCargus API.
-     *
-     * @param string $apiKey
-     * @param string $apiUri
      */
     public function __construct(string $apiKey, ?string $apiUri = null)
     {
@@ -61,10 +58,7 @@ class Client
     /**
      * Execute the request to the API.
      *
-     * @param string      $method
-     * @param string      $endpoint
-     * @param mixed[]     $params
-     * @param string|null $token
+     * @param mixed[] $params
      *
      * @throws UrgentCargusClientException
      *
@@ -101,9 +95,7 @@ class Client
     /**
      * Shorthand for GET request.
      *
-     * @param string      $endpoint
-     * @param mixed[]     $params
-     * @param string|null $token
+     * @param mixed[] $params
      *
      * @return mixed
      */
@@ -115,9 +107,7 @@ class Client
     /**
      * Shorthand for POST request.
      *
-     * @param string      $endpoint
-     * @param mixed[]     $params
-     * @param string|null $token
+     * @param mixed[] $params
      *
      * @return mixed
      */
@@ -129,9 +119,7 @@ class Client
     /**
      * Shorthand for PUT request.
      *
-     * @param string      $endpoint
-     * @param mixed[]     $params
-     * @param string|null $token
+     * @param mixed[] $params
      *
      * @return mixed
      */
@@ -143,9 +131,7 @@ class Client
     /**
      * Shorthand for DELETE request.
      *
-     * @param string      $endpoint
-     * @param mixed[]     $params
-     * @param string|null $token
+     * @param mixed[] $params
      *
      * @return mixed
      */
@@ -154,15 +140,24 @@ class Client
         return $this->request('DELETE', $endpoint, $params, $token);
     }
 
+    public function getToken(string $username, string $password): string
+    {
+        if ($this->accessToken === null) {
+            $this->createAccessToken($username, $password);
+        }
+
+        return $this->accessToken;
+    }
+
+    public function setAccessToken(?string $accessToken): void
+    {
+        $this->accessToken = $accessToken;
+    }
+
     /**
      * Get token from service.
-     *
-     * @param string $username
-     * @param string $password
-     *
-     * @return string
      */
-    public function getToken(string $username, string $password): string
+    private function createAccessToken(string $username, string $password): void
     {
         $accessToken = $this->post('LoginUser', [
             'UserName' => $username,
@@ -174,12 +169,5 @@ class Client
         }
 
         $this->setAccessToken($accessToken);
-
-        return $this->accessToken;
-    }
-
-    public function setAccessToken(?string $accessToken): void
-    {
-        $this->accessToken = $accessToken;
     }
 }
