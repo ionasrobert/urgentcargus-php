@@ -14,13 +14,25 @@ class ClientException extends RuntimeException
 {
     public static function fromException(GuzzleException $exception): self
     {
-        $code = $exception->getResponse() !== null ? $exception->getResponse()->getStatusCode() : 0;
         $message = $exception->getMessage();
 
+        if (!method_exists($exception, 'getResponse')) {
+            return new self(sprintf(
+                '[%s] Something went wrong, the request does not have a response: %s',
+                get_class($exception),
+                $message
+            ));
+        }
+
+        $code = $exception->getResponse() !== null ? $exception->getResponse()->getStatusCode() : 0;
         $contents = $exception->hasResponse() ? (string)$exception->getResponse()->getBody() : '';
 
         if ($contents === '') {
-            return new self(sprintf('Something went wrong: %s', $message));
+            return new self(sprintf(
+                '[%s] Something went wrong: %s',
+                get_class($exception),
+                $message
+            ));
         }
 
         $data = json_decode($contents, true);
