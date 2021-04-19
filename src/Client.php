@@ -14,14 +14,8 @@ use function sprintf;
 use function trigger_error;
 use const E_USER_DEPRECATED;
 
-class Client
+class Client implements ClientInterface
 {
-    /** Library version */
-    public const VERSION = '0.9.11';
-
-    /** Default API Uri */
-    public const API_URI = 'https://urgentcargus.azure-api.net/api/';
-
     /** @var string Subscription Key */
     private $apiKey;
 
@@ -31,9 +25,6 @@ class Client
     /** @var string|null */
     private $accessToken;
 
-    /**
-     * Set subscription key and uri for the UrgentCargus API.
-     */
     public function __construct(string $apiKey, ?string $apiUri = null)
     {
         if ($apiKey === '') {
@@ -56,13 +47,7 @@ class Client
     }
 
     /**
-     * Execute the request to the API.
-     *
-     * @param mixed[] $params
-     *
-     * @throws UrgentCargusClientException
-     *
-     * @return mixed
+     * {@inheritdoc}
      */
     public function request(string $method, string $endpoint, array $params = [], ?string $token = null)
     {
@@ -93,11 +78,7 @@ class Client
     }
 
     /**
-     * Shorthand for GET request.
-     *
-     * @param mixed[] $params
-     *
-     * @return mixed
+     * {@inheritdoc}
      */
     public function get(string $endpoint, array $params = [], ?string $token = null)
     {
@@ -105,11 +86,7 @@ class Client
     }
 
     /**
-     * Shorthand for POST request.
-     *
-     * @param mixed[] $params
-     *
-     * @return mixed
+     * {@inheritdoc}
      */
     public function post(string $endpoint, array $params = [], ?string $token = null)
     {
@@ -117,11 +94,7 @@ class Client
     }
 
     /**
-     * Shorthand for PUT request.
-     *
-     * @param mixed[] $params
-     *
-     * @return mixed
+     * {@inheritdoc}
      */
     public function put(string $endpoint, array $params = [], ?string $token = null)
     {
@@ -129,11 +102,7 @@ class Client
     }
 
     /**
-     * Shorthand for DELETE request.
-     *
-     * @param mixed[] $params
-     *
-     * @return mixed
+     * {@inheritdoc}
      */
     public function delete(string $endpoint, array $params = [], ?string $token = null)
     {
@@ -155,7 +124,7 @@ class Client
     }
 
     /**
-     * Get token from service.
+     * {@inheritdoc}
      */
     public function createAccessToken(string $username, string $password): void
     {

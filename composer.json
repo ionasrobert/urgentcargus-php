@@ -4,10 +4,10 @@
     "type": "library",
     "license": "MIT",
     "require": {
-        "php": "^7.2.5||^8.0",
+        "php": "^7.2.5 || ^8.0",
         "ext-curl": "*",
         "ext-json": "*",
-        "guzzlehttp/guzzle": "^6.0||^7.0"
+        "guzzlehttp/guzzle": "^6.0 || ^7.0"
     },
     "require-dev": {
         "mnib-dev/coding-standard": "dev-master"
